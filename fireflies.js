@@ -2,15 +2,14 @@
 // canvas.height = window.innerHeight * 0.5;
 // canvas.width = window.innerWidth;
 
-var Firefly = function(x, y, radius, color){
+var Firefly = function(x, y, radius){
   this.x = x;
   this.y = y;
   this.radius = radius;
-  this.color = color;
 
   var max_speed = 3;
   var max_acceleration = 1;
-  var max_off_time = 1000;
+  var max_off_time = 1500;
   var max_on_time = 150;
 
   this.next_transition = Math.floor(random(0, max_off_time));
@@ -21,6 +20,8 @@ var Firefly = function(x, y, radius, color){
   };
 
   this.flashing = false;
+
+  this.opacity = 0;
 
 
   this.draw = function(ctx, bounds){
@@ -37,12 +38,19 @@ var Firefly = function(x, y, radius, color){
     }
 
     if(this.flashing){
-      ctx.beginPath();
-      ctx.ellipse(this.x, this.y, this.radius, this.radius, 0, 0, 2 * Math.PI);
-      ctx.fillStyle = this.color;
-      ctx.strokeStyle = "rgba(0, 0, 0, 0)";
-      ctx.fill();
+      this.opacity += 0.05;
+      this.opacity = clip(this.opacity, 0, 1);
+    } else {
+      this.opacity -= 0.05;
+      this.opacity = clip(this.opacity, 0, 1);
     }
+
+    ctx.beginPath();
+    ctx.ellipse(this.x, this.y, this.radius, this.radius, 0, 0, 2 * Math.PI);
+    ctx.fillStyle = "rgba(255, 255, 0, " + this.opacity + ")";
+    // ctx.globalAlpha = this.opacity;
+    ctx.strokeStyle = "rgba(0, 0, 0, 0)";
+    ctx.fill();
 
 
     var xChange = random(-max_acceleration, max_acceleration);
@@ -93,8 +101,6 @@ var fireflies = function(canvas, numFlies, backgroundColor){
   var canvasHeight = canvas.height;
   var minFlyRadius = 1;
   var maxFlyRadius = 3;
-  var minFlyOpacity = 0.8;
-  var maxFlyOpacity = 1;
 
   var ctx = canvas.getContext("2d");
 
@@ -104,9 +110,8 @@ var fireflies = function(canvas, numFlies, backgroundColor){
     var x = Math.floor(random(0, canvasWidth));
     var y = Math.floor(random(0, canvasHeight));
     var radius = clip(Math.ceil(normalDist(2, 1)), minFlyRadius, maxFlyRadius);
-    var opacity = random(minFlyOpacity, maxFlyOpacity);
 
-    var fly = new Firefly(x, y, radius, "rgba(255, 255, 0, " + opacity + ")");
+    var fly = new Firefly(x, y, radius);
     // fly.draw(ctx);
     flies.push(fly);
   }
@@ -124,4 +129,6 @@ var fireflies = function(canvas, numFlies, backgroundColor){
   requestAnimationFrame(draw);
 };
 
-fireflies(canvas, 400, "black");//"#052639");
+var canvasArea = canvas.width * canvas.height;
+
+fireflies(canvas, Math.ceil(canvasArea / 2200), "black");//"#052639");

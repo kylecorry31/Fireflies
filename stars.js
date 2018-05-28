@@ -1,5 +1,5 @@
 var canvas = document.getElementById("stars-canvas");
-canvas.height = window.innerHeight * 0.5;
+canvas.height = window.innerHeight;
 canvas.width = window.innerWidth;
 
 var Star = function(x, y, radius, color){
