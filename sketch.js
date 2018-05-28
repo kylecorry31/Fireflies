@@ -1,8 +1,8 @@
 var fireflies = [];
 
 function preload(){
-	soundFormats('ogg');
-	night = loadSound('Springpeepers.ogg');
+	soundFormats('mp3', 'ogg');
+	night = loadSound('nighttime.mp3');
 }
 
 function setup(){
