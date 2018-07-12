@@ -1,5 +1,6 @@
 var stars = [];
 var mountains = [];
+var sun = undefined;
 
 function setup(){
 	createCanvas(windowWidth, windowHeight);
@@ -9,9 +10,15 @@ function setup(){
 	}
 
 	// for(var i = 0; i < 1; i++){
+	// Night
 	mountains.push(new MountainRange("6, 47, 71", 1, 400, 600));
 	mountains.push(new MountainRange("5, 42, 63", 1, 250, 450));
 	mountains.push(new MountainRange("5, 36, 54", 1, 0, 300));
+	// Day
+	// mountains.push(new MountainRange("24, 160, 53", 1, 400, 600));
+	// mountains.push(new MountainRange("5, 42, 63", 1, 250, 450));
+	// mountains.push(new MountainRange("5, 36, 54", 1, 0, 300));
+	sun = new Sun('253, 184, 19', width-200, height - 500, 100);
 	// }
 }
 
@@ -21,8 +28,14 @@ function windowResized() {
 
 
 function draw(){
-	background('#052436');
-	stars.forEach(function(star){ star.draw() });
+	// night
+	// background('#052436');
+	// stars.forEach(function(star){ star.draw() });
+	// day
+	background('#87CEEB');
+	if (sun) {
+		sun.draw();
+	}
 	mountains.forEach(function(mountain){ mountain.draw() });
 }
 
@@ -68,5 +81,17 @@ function MountainRange(color, opacity, yMin, yMax){
 		vertex(0, height);
 		endShape(CLOSE);
 		
+	}
+}
+
+function Sun(color, x, y, radius){
+
+	this.draw = function(){
+		noStroke();
+
+		fill("rgba(" + color + ", " + 1 + ")");
+
+		ellipse(x, y, radius);
+
 	}
 }
